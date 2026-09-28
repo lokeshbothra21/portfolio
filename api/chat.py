@@ -28,7 +28,8 @@ MODELS = [m.strip() for m in os.environ.get("GEMINI_MODELS", "gemini-3.5-flash,g
 MAX_QUESTION = 500
 MAX_OUTPUT_TOKENS = 700
 RATE_LIMIT = (8, 60)  # requests per window (seconds), per IP, per warm instance
-MODEL_TIMEOUT_MS = 8000
+MODEL_TIMEOUT_MS = 12000  # Gemini rejects deadlines under 10 s
+GENERATE_BUDGET_S = 15  # stop failing over after this, well inside Vercel's 30 s limit
 COOLDOWN_S = 60  # skip a model this long after it fails, so busy periods stay fast
 
 CONTENT = json.loads((Path(__file__).parent / "_data" / "content.json").read_text())
@@ -136,6 +137,8 @@ async def run(question: str) -> AsyncIterator[tuple[str, dict]]:
     text, sent, model_used, tokens, truncated = "", 0, None, 0, False
     t = time.perf_counter()
     for model in MODELS:
+        if time.perf_counter() - t > GENERATE_BUDGET_S:
+            break
         if time.monotonic() < _cooldown.get(model, 0):
             yield "retry", {"model": model, "error": "skipped, failed recently"}
             continue
