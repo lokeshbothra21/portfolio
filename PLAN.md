@@ -20,7 +20,7 @@ Always one click away: a plain, fast, readable page for recruiters.
 | Physics (later) | `@react-three/rapier` | Bricks snapping and tumbling |
 | Chat backend | FastAPI as a Vercel Python function (`/api`) | Your stack. Fallback: Cloud Run if limits bite |
 | LLM | Gemini API (free tier) | Already familiar; embeddings + generation |
-| Retrieval | BM25 + dense (precomputed Gemini embeddings in JSON) + LLM rerank + abstention threshold | Corpus is a few KB, so no vector DB needed; still shows the real technique |
+| Retrieval | BM25 + dense (precomputed Gemini embeddings in JSON), reciprocal rank fusion, dense-similarity abstention gate | Corpus is a few KB, so no vector DB needed; still shows the real technique |
 | Content | One file: `content/content.ts` | Site, chat corpus and 3D labels all read from it; new job = edit text only |
 | Naming | "Brick" style, never the LEGO name or logo | Trademark |
 
@@ -31,7 +31,7 @@ Always one click away: a plain, fast, readable page for recruiters.
 | Cover | Name, title, resume PDF | "AI Engineer · 4 sets inside · Ages 18+" + Tour / Read as page toggle |
 | Parts inventory | Skills section | Brick bins by colour: AI Systems, Frameworks, Databases, Vector DBs, Cloud & DevOps |
 | Set #01 AegisOps (flagship) | Projects | Open source, can be fully live. Steps = 6 LangGraph nodes; verifier replay (0.86 → 0.57) |
-| Set #02 Scientific Literature RAG | Current employer (**not named**) | Shown as "an AI company in scientific computing, Bangalore". 0.68 → 0.79 answer correctness, 0.54 → 0.64 context precision |
+| Set #02 Scientific Literature RAG | Prescience Insilico Pvt Ltd | 0.68 → 0.79 answer correctness, 0.54 → 0.64 context precision |
 | Set #03 AI Sports Analytics | HashInclude | Text-to-SQL, MCP, 95%+ query accuracy, 30% DB overhead cut |
 | Set #04 Rally | HashInclude | Enterprise RAG, Docling + Celery, 40% less email handling time |
 | How it started | Trading & family business 2017–2023 | Origin story: "First build: Excel tools on a trading desk" |
@@ -39,7 +39,7 @@ Always one click away: a plain, fast, readable page for recruiters.
 | Technic machine | Chat | Hybrid retrieval → rerank → answer or abstain, with live trace |
 | Back cover | Contact | Email, GitHub, LinkedIn, LeetCode (no phone number on the public site) |
 
-Skipped: Multi-Agent Scientific Simulation Platform.
+Skipped: one confidential project from the current role (not listed anywhere).
 
 ---
 
@@ -47,19 +47,19 @@ Skipped: Multi-Agent Scientific Simulation Platform.
 
 Each phase ends deployed and working; it's fine to stop after any of them.
 
-### Phase 0: Setup (≈ 1 evening)
+### Phase 0: Setup (≈ 1 evening) ✅ done
 - Scaffold Next.js + TS + Tailwind, ESLint, Prettier
 - Push to GitHub, connect to Vercel, first deploy
 - **Done when:** a hello page is live on `*.vercel.app`
 
-### Phase 1: Plain page + content (≈ 1 weekend)
+### Phase 1: Plain page + content (≈ 1 weekend) ✅ done (resume download, OG image, Lighthouse still open)
 - `content/content.ts` filled from the resume
 - Plain page: hero, parts inventory, 4 sets, experience timeline, origin story, certifications, contact
 - Brick-flavoured styling (stud patterns, bold primary colours, booklet typography) without any 3D yet
 - Resume PDF download, SEO metadata, Open Graph image, mobile layout
 - **Done when:** a recruiter can read everything in 30 seconds on a phone; Lighthouse ≥ 95
 
-### Phase 2: Technic machine backend (≈ 1–2 weekends)
+### Phase 2: Technic machine backend (≈ 1–2 weekends) 🟡 built; answer eval waiting on Gemini capacity
 - Build step: `content.ts` → chunks → Gemini embeddings → `corpus.json`
 - FastAPI `/api/chat`: BM25 + dense fusion → LLM rerank → answer with citations, or abstain below a confidence threshold
 - Streams a trace (retrieved chunks, scores, decision, latency, tokens) over SSE
@@ -104,8 +104,9 @@ portfolio/
   - AegisOps: https://github.com/lokeshbothra21/aegisops
   - LinkedIn: https://www.linkedin.com/in/lokeshbothra/
   - LeetCode: https://leetcode.com/u/lokesh21bothra/
-- [x] Employer names: HashInclude can be named; the current employer (Set #02) must NOT be named anywhere (site, chat corpus, metadata, repo)
-- [ ] Confirm the metrics are OK to publish (Sets #02–#04)
+- [x] Employer names: Prescience Insilico Pvt Ltd and HashInclude can both be named
+- [x] Only the RAG project from the current role is public; the other one stays off the site, corpus and repo
+- [x] Metrics OK to publish
 - [ ] Photo (optional; could be a brick minifig instead)
-- [ ] Gemini API key (Phase 2)
-- [ ] GitHub + Vercel accounts ready (Phase 0)
+- [x] Gemini API key (Phase 2)
+- [x] GitHub + Vercel accounts ready (Phase 0)

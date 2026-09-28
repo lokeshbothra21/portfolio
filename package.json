@@ -6,7 +6,12 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "api": ".venv/bin/uvicorn api.chat:app --reload --port 8000",
+    "corpus": "node --no-warnings scripts/export-content.mjs && .venv/bin/python scripts/build_corpus.py",
+    "eval": ".venv/bin/python scripts/eval.py",
+    "test:api": ".venv/bin/python -m pytest -q -W ignore::DeprecationWarning tests",
+    "prebuild": "node --no-warnings scripts/check-content.mjs"
   },
   "dependencies": {
     "next": "16.3.6",

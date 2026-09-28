@@ -1,5 +1,5 @@
 // Single source of truth for the site, the chat corpus and the 3D labels.
-// Rule: the current employer (Set #02) is never named anywhere.
+// Rule: from the current role, only the literature RAG project is public.
 
 export type Link = { label: string; href: string };
 
@@ -48,6 +48,7 @@ export const profile = {
   location: "Bangalore, India",
   url: "https://lokeshbothra.vercel.app",
   tagline: "I build AI systems that check their own work.",
+  availability: "Open to AI engineering roles working on agents, retrieval and evaluation.",
   intro:
     "AI engineer building production agentic and RAG systems for enterprise knowledge and scientific computing. " +
     "LangGraph, multi-agent orchestration, hybrid retrieval, LLM evaluation, FastAPI and GCP. " +
@@ -129,7 +130,7 @@ export const sets: BrickSet[] = [
     colour: "blue",
     name: "Scientific Literature RAG",
     tagline: "Question answering over research PDFs",
-    context: "Production platform · current role",
+    context: "Prescience Insilico Pvt Ltd",
     summary:
       "A multi-user platform for asking questions of uploaded scientific papers. I took ownership of it and redesigned the pipeline end to end.",
     steps: [
@@ -246,12 +247,12 @@ export const sets: BrickSet[] = [
 export const experience: Role[] = [
   {
     title: "Software Developer",
-    org: "AI company in scientific computing",
+    org: "Prescience Insilico Pvt Ltd",
     location: "Bangalore, India",
     start: "Apr 2026",
     end: "Present",
     summary:
-      "Own a production scientific-literature RAG platform and build LangGraph multi-agent systems for scientific workflows.",
+      "Own and redesigned a production RAG platform for question answering over scientific literature.",
     sets: ["literature-rag"],
   },
   {

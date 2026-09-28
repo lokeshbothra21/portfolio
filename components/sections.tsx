@@ -6,6 +6,7 @@ const setName = Object.fromEntries(sets.map((s) => [s.id, `Set #${s.number} ${s.
 export function Nav() {
   const links = [
     ["Sets", "#sets"],
+    ["Ask", "#machine"],
     ["Parts", "#parts"],
     ["Experience", "#experience"],
     ["Contact", "#contact"],
@@ -156,7 +157,7 @@ export function BackCover() {
       <p className="font-mono text-xs font-semibold uppercase tracking-[0.2em] text-white/60">Back cover</p>
       <h2 className="mt-2 font-display text-3xl font-extrabold sm:text-4xl">Let&apos;s build something.</h2>
       <p className="mt-3 max-w-xl text-white/75">
-        Open to AI engineering roles working on agents, retrieval and evaluation. Based in {profile.location}.
+        {profile.availability} Based in {profile.location}.
       </p>
       <ul className="mt-8 grid gap-3 sm:grid-cols-2">
         {contacts.map((c) => (

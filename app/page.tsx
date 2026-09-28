@@ -2,6 +2,7 @@ import { SectionHeading, StudDivider } from "@/components/booklet";
 import { Cover } from "@/components/Cover";
 import { BackCover, BonusPieces, Experience, Nav, Origin, PartsInventory } from "@/components/sections";
 import { SetSpread } from "@/components/SetSpread";
+import { TechnicMachine } from "@/components/TechnicMachine";
 import { profile, sets } from "@/content/content";
 
 // The plain booklet page: everything a recruiter needs, no 3D required.
@@ -24,6 +25,7 @@ export default function Home() {
           </div>
         </section>
 
+        <TechnicMachine />
         <StudDivider />
         <PartsInventory />
         <StudDivider />
