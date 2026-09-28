@@ -205,7 +205,7 @@ export const sets: BrickSet[] = [
     check: {
       title: "Validate and self-correct",
       detail:
-        "Automated SQL validation and self-correction loops before results reach the user, plus OpenTelemetry tracing and Cloud Build CI/CD.",
+        "Automated SQL validation and self-correction loops check every generated query before results reach the user, bringing text-to-SQL query accuracy to 95%+. Plus OpenTelemetry tracing and Cloud Build CI/CD.",
     },
     metrics: [
       { value: "95%+", label: "query accuracy" },

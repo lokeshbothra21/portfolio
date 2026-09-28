@@ -3,7 +3,7 @@
     npm run eval              # retrieval + gate + answers (needs Gemini)
     npm run eval -- --no-llm  # retrieval + gate only
 
-Retrieval: recall@6 of the passage(s) that answer each question.
+Retrieval: recall@8 of the passage(s) that answer each question.
 Gate: on-topic questions pass, off-topic ones abstain.
 Answers: expected keywords present, citations valid, every number verified.
 Results are written to eval/results.json.
@@ -73,7 +73,7 @@ async def run_case(question: str, use_llm: bool) -> dict:
 
 
 async def main(use_llm: bool) -> None:
-    rows, recall, gate_ok, kw_ok, verified, answered = [], 0, 0, 0, 0, 0
+    rows, recall, gate_ok, kw_ok, verified, answered, wrong_declines = [], 0, 0, 0, 0, 0, 0
     on_topic = [c for c in CASES if c[1]]
     for question, prefixes, keywords in CASES:
         res = await run_case(question, use_llm)
@@ -83,23 +83,28 @@ async def main(use_llm: bool) -> None:
         if should_answer:
             res["hit"] = any(i.startswith(p) for i in res["ids"] for p in prefixes)
             recall += res["hit"]
+        if use_llm and should_answer and res.get("abstained"):
+            res["wrongly_declined"] = True
+            wrong_declines += 1
         if use_llm and should_answer and not res.get("abstained") and not res.get("fallback"):
             answered += 1
             res["keywords_ok"] = all(k.lower() in res["answer"].lower() for k in keywords)
             kw_ok += res["keywords_ok"]
             verified += res["verify"]["passed"]
         rows.append(res)
-        flag = "ok " if res["gate_ok"] and res.get("hit", True) and res.get("keywords_ok", True) else "BAD"
+        good = res["gate_ok"] and res.get("hit", True) and res.get("keywords_ok", True) and not res.get("wrongly_declined")
+        flag = "ok " if good else "BAD"
         print(f"{flag} {question}")
 
     summary = {
         "cases": len(CASES),
-        "retrieval_recall@6": round(recall / len(on_topic), 3),
+        "retrieval_recall@8": round(recall / len(on_topic), 3),
         "gate_accuracy": round(gate_ok / len(CASES), 3),
     }
     if use_llm:
         summary.update(
             answered_by_llm=answered,
+            wrongly_declined=wrong_declines,
             keyword_accuracy=round(kw_ok / answered, 3) if answered else None,
             verified_answers=round(verified / answered, 3) if answered else None,
             median_ms=sorted(r["ms"] for r in rows)[len(rows) // 2],

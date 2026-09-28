@@ -1,8 +1,13 @@
 {
   "summary": {
     "cases": 28,
-    "retrieval_recall@6": 1.0,
-    "gate_accuracy": 1.0
+    "retrieval_recall@8": 1.0,
+    "gate_accuracy": 1.0,
+    "answered_by_llm": 22,
+    "wrongly_declined": 0,
+    "keyword_accuracy": 1.0,
+    "verified_answers": 1.0,
+    "median_ms": 1451
   },
   "rows": [
     {
@@ -13,12 +18,26 @@
         "set:aegisops",
         "role:HashInclude Computech Pvt Ltd",
         "role:Prescience Insilico Pvt Ltd",
-        "skills:Cloud & DevOps"
+        "skills:Cloud & DevOps",
+        "skills:Vector databases",
+        "set:literature-rag"
       ],
       "confident": true,
-      "max_dense": 0.706,
+      "answer": "Lokesh is an AI Engineer based in Bangalore who builds production agentic and RAG systems for enterprise knowledge and scientific computing, with a focus on agents that verify evidence, abstain when unsure, and prove quality with numbers. [1] He has built backends for a generative-AI sports analytics platform and an enterprise RAG assistant, and he owned and redesigned a production RAG platform for question answering over scientific literature. [4][5][8] His work also includes autonomous incident-response systems over real OpenTelemetry data, with documented results and testing coverage. [3] He has skills in GCP, Docker, Kubernetes, Cloud Run, OpenTelemetry, FAISS, ChromaDB, and pgvector. [6][7]",
+      "abstained": false,
+      "verify": {
+        "citations": 7,
+        "invalid_citations": [],
+        "numbers": 0,
+        "unverified_numbers": [],
+        "passed": true
+      },
+      "ms": 13123,
+      "model": "openai:gpt-5.4-mini",
+      "fallback": false,
       "gate_ok": true,
-      "hit": true
+      "hit": true,
+      "keywords_ok": true
     },
     {
       "question": "What is AegisOps?",
@@ -28,27 +47,55 @@
         "set:aegisops:step2",
         "set:aegisops:step3",
         "set:aegisops:step1",
-        "set:aegisops"
+        "set:aegisops",
+        "set:aegisops:check",
+        "skills:Cloud & DevOps"
       ],
       "confident": true,
-      "max_dense": 0.757,
+      "answer": "Lokesh\u2019s AegisOps is an autonomous incident-response agent, open source and in progress, that detects and investigates incidents over real OpenTelemetry data from a 15-service microservice system and never acts without a human. [6] It uses LangGraph, MCP, OpenTelemetry, PostgreSQL, Python, Cloud Run, Workload Identity Federation, and CodeQL. [6]",
+      "abstained": false,
+      "verify": {
+        "citations": 1,
+        "invalid_citations": [],
+        "numbers": 1,
+        "unverified_numbers": [],
+        "passed": true
+      },
+      "ms": 2131,
+      "model": "openai:gpt-5.4-mini",
+      "fallback": false,
       "gate_ok": true,
-      "hit": true
+      "hit": true,
+      "keywords_ok": true
     },
     {
       "question": "How fast did AegisOps detect an incident?",
       "ids": [
         "set:aegisops:step1",
+        "set:aegisops:check",
         "set:aegisops:step5",
         "set:aegisops",
         "set:aegisops:step2",
-        "set:aegisops:check",
-        "set:aegisops:step4"
+        "set:aegisops:step4",
+        "set:rally:step3",
+        "set:aegisops:step3"
       ],
       "confident": true,
-      "max_dense": 0.804,
+      "answer": "Lokesh\u2019s AegisOps detected an incident 57 s after fault injection in a live test. [1]",
+      "abstained": false,
+      "verify": {
+        "citations": 1,
+        "invalid_citations": [],
+        "numbers": 1,
+        "unverified_numbers": [],
+        "passed": true
+      },
+      "ms": 1420,
+      "model": "openai:gpt-5.4-mini",
+      "fallback": false,
       "gate_ok": true,
-      "hit": true
+      "hit": true,
+      "keywords_ok": true
     },
     {
       "question": "How does AegisOps stop the LLM from making things up?",
@@ -58,12 +105,26 @@
         "set:aegisops:step4",
         "set:aegisops:step2",
         "set:aegisops:step1",
-        "set:aegisops:step3"
+        "set:aegisops:step3",
+        "set:aegisops",
+        "skills:AI Systems"
       ],
       "confident": true,
-      "max_dense": 0.795,
+      "answer": "AegisOps stops the LLM from making things up by using a deterministic evidence verifier that checks every trace, log, metric, and change the LLM cites against the telemetry store. It also treats tool output as untrusted input to resist prompt injection. [1][6]",
+      "abstained": false,
+      "verify": {
+        "citations": 2,
+        "invalid_citations": [],
+        "numbers": 0,
+        "unverified_numbers": [],
+        "passed": true
+      },
+      "ms": 1611,
+      "model": "openai:gpt-5.4-mini",
+      "fallback": false,
       "gate_ok": true,
-      "hit": true
+      "hit": true,
+      "keywords_ok": true
     },
     {
       "question": "Can AegisOps fix problems on its own?",
@@ -71,44 +132,86 @@
         "set:aegisops:step5",
         "set:aegisops:step2",
         "set:aegisops:step1",
-        "set:aegisops:check",
         "set:aegisops:step4",
-        "set:aegisops:step3"
+        "set:aegisops:step3",
+        "set:aegisops:check",
+        "set:aegisops",
+        "profile"
       ],
       "confident": true,
-      "max_dense": 0.781,
+      "answer": "AegisOps can detect and investigate incidents, but it never acts without a human, and remediation actions can only run after human approval. [7][1]",
+      "abstained": false,
+      "verify": {
+        "citations": 2,
+        "invalid_citations": [],
+        "numbers": 0,
+        "unverified_numbers": [],
+        "passed": true
+      },
+      "ms": 1602,
+      "model": "openai:gpt-5.4-mini",
+      "fallback": false,
       "gate_ok": true,
-      "hit": true
+      "hit": true,
+      "keywords_ok": true
     },
     {
       "question": "How many tests does AegisOps have?",
       "ids": [
-        "set:aegisops:step5",
+        "set:aegisops:check",
         "set:aegisops:step4",
+        "set:aegisops:step5",
         "set:aegisops:step1",
         "set:aegisops",
         "set:aegisops:step3",
-        "set:aegisops:step2"
+        "set:aegisops:step2",
+        "set:literature-rag:step5"
       ],
       "confident": true,
-      "max_dense": 0.73,
+      "answer": "AegisOps has 109 tests. [1]",
+      "abstained": false,
+      "verify": {
+        "citations": 1,
+        "invalid_citations": [],
+        "numbers": 1,
+        "unverified_numbers": [],
+        "passed": true
+      },
+      "ms": 1452,
+      "model": "openai:gpt-5.4-mini",
+      "fallback": false,
       "gate_ok": true,
-      "hit": true
+      "hit": true,
+      "keywords_ok": true
     },
     {
       "question": "How much did he improve RAGAS answer correctness?",
       "ids": [
-        "set:literature-rag",
         "set:literature-rag:check",
+        "set:literature-rag",
         "skills:AI Systems",
-        "set:aegisops:check",
+        "set:sports-analytics:check",
         "set:literature-rag:step3",
-        "set:rally:check"
+        "set:rally:check",
+        "set:literature-rag:step4",
+        "set:literature-rag:step2"
       ],
       "confident": true,
-      "max_dense": 0.721,
+      "answer": "Lokesh improved RAGAS answer correctness from 0.68 to 0.79 in Scientific Literature RAG. [1][2]",
+      "abstained": false,
+      "verify": {
+        "citations": 2,
+        "invalid_citations": [],
+        "numbers": 2,
+        "unverified_numbers": [],
+        "passed": true
+      },
+      "ms": 1451,
+      "model": "openai:gpt-5.4-mini",
+      "fallback": false,
       "gate_ok": true,
-      "hit": true
+      "hit": true,
+      "keywords_ok": true
     },
     {
       "question": "What retrieval approach does the literature RAG use?",
@@ -118,12 +221,26 @@
         "set:literature-rag:check",
         "set:literature-rag:step1",
         "set:literature-rag:step4",
-        "set:literature-rag:step5"
+        "set:literature-rag:step5",
+        "set:literature-rag",
+        "skills:AI Systems"
       ],
       "confident": true,
-      "max_dense": 0.764,
+      "answer": "Lokesh\u2019s Scientific Literature RAG uses hybrid BM25 + FAISS search with Gemini embedding-001, followed by BGE cross-encoder reranking. [2]",
+      "abstained": false,
+      "verify": {
+        "citations": 1,
+        "invalid_citations": [],
+        "numbers": 1,
+        "unverified_numbers": [],
+        "passed": true
+      },
+      "ms": 1400,
+      "model": "openai:gpt-5.4-mini",
+      "fallback": false,
       "gate_ok": true,
-      "hit": true
+      "hit": true,
+      "keywords_ok": true
     },
     {
       "question": "Where does Lokesh work now?",
@@ -133,12 +250,26 @@
         "role:Prescience Insilico Pvt Ltd",
         "role:HashInclude Computech Pvt Ltd",
         "set:aegisops",
-        "origin"
+        "origin",
+        "education",
+        "set:literature-rag"
       ],
       "confident": true,
-      "max_dense": 0.706,
+      "answer": "Lokesh Bothra works at Prescience Insilico Pvt Ltd in Bangalore, India as a Software Developer, with the role listed from Apr 2026 to Present. [3]",
+      "abstained": false,
+      "verify": {
+        "citations": 1,
+        "invalid_citations": [],
+        "numbers": 1,
+        "unverified_numbers": [],
+        "passed": true
+      },
+      "ms": 1428,
+      "model": "openai:gpt-5.4-mini",
+      "fallback": false,
       "gate_ok": true,
-      "hit": true
+      "hit": true,
+      "keywords_ok": true
     },
     {
       "question": "What did he build at HashInclude?",
@@ -148,57 +279,113 @@
         "set:sports-analytics",
         "profile",
         "skills:Cloud & DevOps",
-        "set:sports-analytics:check"
+        "set:sports-analytics:check",
+        "set:literature-rag",
+        "origin"
       ],
       "confident": true,
-      "max_dense": 0.711,
+      "answer": "Lokesh built the backends for a generative-AI sports analytics platform and an enterprise RAG assistant at HashInclude Computech Pvt Ltd. [1] He also built Project Rally, a document-centric RAG assistant for retrieving knowledge from large internal document collections and email, and Project AI Sports Analytics, a backend that lets coaches and analysts query large sports datasets in natural language. [2][3]",
+      "abstained": false,
+      "verify": {
+        "citations": 3,
+        "invalid_citations": [],
+        "numbers": 0,
+        "unverified_numbers": [],
+        "passed": true
+      },
+      "ms": 1795,
+      "model": "openai:gpt-5.4-mini",
+      "fallback": false,
       "gate_ok": true,
-      "hit": true
+      "hit": true,
+      "keywords_ok": true
     },
     {
       "question": "How accurate were the text-to-SQL agents?",
       "ids": [
+        "set:sports-analytics:check",
         "set:sports-analytics:step1",
         "set:sports-analytics:step2",
         "profile",
-        "contact",
         "origin",
+        "contact",
+        "set:literature-rag:check",
         "set:literature-rag:step3"
       ],
       "confident": true,
-      "max_dense": 0.709,
+      "answer": "The text-to-SQL agents brought query accuracy to 95%+ [1].",
+      "abstained": false,
+      "verify": {
+        "citations": 1,
+        "invalid_citations": [],
+        "numbers": 1,
+        "unverified_numbers": [],
+        "passed": true
+      },
+      "ms": 1333,
+      "model": "openai:gpt-5.4-mini",
+      "fallback": false,
       "gate_ok": true,
-      "hit": true
+      "hit": true,
+      "keywords_ok": true
     },
     {
       "question": "How was AI-generated code executed safely?",
       "ids": [
         "set:sports-analytics:step4",
         "set:aegisops:check",
+        "set:sports-analytics:check",
         "set:sports-analytics",
         "set:aegisops",
         "set:aegisops:step5",
-        "set:literature-rag:step5"
+        "set:literature-rag:step5",
+        "set:aegisops:step4"
       ],
       "confident": true,
-      "max_dense": 0.684,
+      "answer": "Lokesh\u2019s AI-generated Python ran in a constrained Docker sandbox called llm-sandbox, and it streamed interactive Plotly charts over SSE. [1]",
+      "abstained": false,
+      "verify": {
+        "citations": 1,
+        "invalid_citations": [],
+        "numbers": 0,
+        "unverified_numbers": [],
+        "passed": true
+      },
+      "ms": 1475,
+      "model": "openai:gpt-5.4-mini",
+      "fallback": false,
       "gate_ok": true,
-      "hit": true
+      "hit": true,
+      "keywords_ok": true
     },
     {
       "question": "What is Rally?",
       "ids": [
         "set:rally:step3",
         "set:rally:step2",
-        "set:rally:check",
         "set:rally:step1",
+        "set:rally:check",
         "set:rally",
-        "set:sports-analytics:step3"
+        "set:sports-analytics:step3",
+        "set:sports-analytics:step2",
+        "set:literature-rag:step4"
       ],
       "confident": true,
-      "max_dense": 0.715,
+      "answer": "Rally is an AI-powered enterprise assistant at HashInclude Computech, and it is a document-centric RAG assistant for retrieving knowledge from large internal document collections and email. It uses Docling, Celery, pgvector, Redis, Microsoft Graph API, and FastAPI. [5]",
+      "abstained": false,
+      "verify": {
+        "citations": 1,
+        "invalid_citations": [],
+        "numbers": 0,
+        "unverified_numbers": [],
+        "passed": true
+      },
+      "ms": 1583,
+      "model": "openai:gpt-5.4-mini",
+      "fallback": false,
       "gate_ok": true,
-      "hit": true
+      "hit": true,
+      "keywords_ok": true
     },
     {
       "question": "How much time did email automation save?",
@@ -208,12 +395,26 @@
         "set:rally",
         "contact",
         "origin",
-        "set:sports-analytics"
+        "set:sports-analytics",
+        "set:sports-analytics:check",
+        "set:aegisops:step4"
       ],
       "confident": true,
-      "max_dense": 0.69,
+      "answer": "Rally\u2019s email automation reduced email handling time by 40%, which is reported as 40% less email handling time. [1]",
+      "abstained": false,
+      "verify": {
+        "citations": 1,
+        "invalid_citations": [],
+        "numbers": 1,
+        "unverified_numbers": [],
+        "passed": true
+      },
+      "ms": 1458,
+      "model": "openai:gpt-5.4-mini",
+      "fallback": false,
       "gate_ok": true,
-      "hit": true
+      "hit": true,
+      "keywords_ok": true
     },
     {
       "question": "Has he worked with vector databases?",
@@ -223,12 +424,26 @@
         "skills:Databases",
         "set:literature-rag:step4",
         "set:rally",
-        "profile"
+        "profile",
+        "set:literature-rag",
+        "set:sports-analytics"
       ],
       "confident": true,
-      "max_dense": 0.792,
+      "answer": "Lokesh has worked with vector databases, including FAISS, ChromaDB, and pgvector. [1] He also used vector retrieval on PostgreSQL with Redis for relevance and latency, and built systems with FAISS and pgvector in projects and skills. [2][5][7]",
+      "abstained": false,
+      "verify": {
+        "citations": 4,
+        "invalid_citations": [],
+        "numbers": 0,
+        "unverified_numbers": [],
+        "passed": true
+      },
+      "ms": 1538,
+      "model": "openai:gpt-5.4-mini",
+      "fallback": false,
       "gate_ok": true,
-      "hit": true
+      "hit": true,
+      "keywords_ok": true
     },
     {
       "question": "Does he know Kubernetes?",
@@ -238,12 +453,26 @@
         "skills:Vector databases",
         "set:sports-analytics",
         "set:aegisops",
-        "skills:Databases"
+        "skills:Databases",
+        "skills:Languages",
+        "skills:Frameworks"
       ],
       "confident": true,
-      "max_dense": 0.686,
+      "answer": "Lokesh has Kubernetes in his Cloud & DevOps skills. [1]",
+      "abstained": false,
+      "verify": {
+        "citations": 1,
+        "invalid_citations": [],
+        "numbers": 0,
+        "unverified_numbers": [],
+        "passed": true
+      },
+      "ms": 1362,
+      "model": "openai:gpt-5.4-mini",
+      "fallback": false,
       "gate_ok": true,
-      "hit": true
+      "hit": true,
+      "keywords_ok": true
     },
     {
       "question": "What programming languages does he use?",
@@ -253,12 +482,26 @@
         "set:sports-analytics",
         "skills:Databases",
         "skills:Vector databases",
-        "profile"
+        "profile",
+        "origin",
+        "set:literature-rag"
       ],
       "confident": true,
-      "max_dense": 0.732,
+      "answer": "Lokesh uses Python. [1]",
+      "abstained": false,
+      "verify": {
+        "citations": 1,
+        "invalid_citations": [],
+        "numbers": 0,
+        "unverified_numbers": [],
+        "passed": true
+      },
+      "ms": 1167,
+      "model": "openai:gpt-5.4-mini",
+      "fallback": false,
       "gate_ok": true,
-      "hit": true
+      "hit": true,
+      "keywords_ok": true
     },
     {
       "question": "Which cloud certifications does he have?",
@@ -268,12 +511,26 @@
         "set:aegisops",
         "set:sports-analytics:check",
         "education",
-        "set:sports-analytics"
+        "set:sports-analytics",
+        "skills:Databases",
+        "profile"
       ],
       "confident": true,
-      "max_dense": 0.77,
+      "answer": "Lokesh has Google Professional Cloud Architect, Microsoft Certified: Azure AI Engineer Associate, and Google Associate Cloud Engineer certifications. [1]",
+      "abstained": false,
+      "verify": {
+        "citations": 1,
+        "invalid_citations": [],
+        "numbers": 0,
+        "unverified_numbers": [],
+        "passed": true
+      },
+      "ms": 1437,
+      "model": "openai:gpt-5.4-mini",
+      "fallback": false,
       "gate_ok": true,
-      "hit": true
+      "hit": true,
+      "keywords_ok": true
     },
     {
       "question": "Where did he study?",
@@ -283,12 +540,26 @@
         "origin",
         "skills:Languages",
         "skills:Databases",
-        "role:HashInclude Computech Pvt Ltd"
+        "role:HashInclude Computech Pvt Ltd",
+        "role:Prescience Insilico Pvt Ltd",
+        "profile"
       ],
       "confident": true,
-      "max_dense": 0.637,
+      "answer": "Lokesh studied PG-DAC at CDAC (IACSD), Pune, in 2023 \u2013 2024, and B.Tech in Information Technology at Govt. College of Engineering, Bikaner, from 2013 \u2013 2017. [1]",
+      "abstained": false,
+      "verify": {
+        "citations": 1,
+        "invalid_citations": [],
+        "numbers": 4,
+        "unverified_numbers": [],
+        "passed": true
+      },
+      "ms": 1680,
+      "model": "openai:gpt-5.4-mini",
+      "fallback": false,
       "gate_ok": true,
-      "hit": true
+      "hit": true,
+      "keywords_ok": true
     },
     {
       "question": "What did he do before software?",
@@ -298,12 +569,26 @@
         "set:sports-analytics:check",
         "origin",
         "set:sports-analytics",
-        "profile"
+        "profile",
+        "skills:Frameworks",
+        "skills:Languages"
       ],
       "confident": true,
-      "max_dense": 0.679,
+      "answer": "Lokesh worked in trading and operations in his family business in Bikaner, India from 2017 to 2023. He says his first builds were Excel tools on a trading desk for tracking portfolio performance and generating client reports automatically, while he also ran daily equity trading operations, client transactions, and KYC documentation. [4]",
+      "abstained": false,
+      "verify": {
+        "citations": 1,
+        "invalid_citations": [],
+        "numbers": 2,
+        "unverified_numbers": [],
+        "passed": true
+      },
+      "ms": 1597,
+      "model": "openai:gpt-5.4-mini",
+      "fallback": false,
       "gate_ok": true,
-      "hit": true
+      "hit": true,
+      "keywords_ok": true
     },
     {
       "question": "How can I contact him?",
@@ -313,12 +598,26 @@
         "profile",
         "skills:Languages",
         "role:Prescience Insilico Pvt Ltd",
-        "role:HashInclude Computech Pvt Ltd"
+        "role:HashInclude Computech Pvt Ltd",
+        "set:literature-rag",
+        "certifications"
       ],
       "confident": true,
-      "max_dense": 0.67,
+      "answer": "Lokesh can be contacted by email at lokesh8946891910@gmail.com. He is also reachable on LinkedIn, GitHub, and LeetCode through the listed profiles. [1]",
+      "abstained": false,
+      "verify": {
+        "citations": 1,
+        "invalid_citations": [],
+        "numbers": 0,
+        "unverified_numbers": [],
+        "passed": true
+      },
+      "ms": 1422,
+      "model": "openai:gpt-5.4-mini",
+      "fallback": false,
       "gate_ok": true,
-      "hit": true
+      "hit": true,
+      "keywords_ok": true
     },
     {
       "question": "What is his experience with MCP?",
@@ -328,12 +627,26 @@
         "skills:AI Systems",
         "set:aegisops",
         "origin",
-        "certifications"
+        "certifications",
+        "set:aegisops:step3",
+        "role:HashInclude Computech Pvt Ltd"
       ],
       "confident": true,
-      "max_dense": 0.659,
+      "answer": "Lokesh has used MCP in AI systems and in AegisOps. [3] [4] He built an AI sports analytics backend with MCP as one of the tools used with Google Agent ADK, Gemini 2.5 Pro, and BigQuery. [2] He also built AegisOps with MCP and exposed 9 read-only telemetry tools over MCP to investigate incidents safely. [4] [7]",
+      "abstained": false,
+      "verify": {
+        "citations": 4,
+        "invalid_citations": [],
+        "numbers": 2,
+        "unverified_numbers": [],
+        "passed": true
+      },
+      "ms": 1659,
+      "model": "openai:gpt-5.4-mini",
+      "fallback": false,
       "gate_ok": true,
-      "hit": true
+      "hit": true,
+      "keywords_ok": true
     },
     {
       "question": "What is your expected salary?",
@@ -343,10 +656,16 @@
         "role:HashInclude Computech Pvt Ltd",
         "role:Prescience Insilico Pvt Ltd",
         "education",
-        "skills:Cloud & DevOps"
+        "skills:Cloud & DevOps",
+        "set:rally:check",
+        "skills:Frameworks"
       ],
       "confident": false,
-      "max_dense": 0.575,
+      "answer": "I can only answer from what's written on this site about Lokesh's work, projects and skills, and I couldn't find that here. You can ask him directly at lokesh8946891910@gmail.com.",
+      "abstained": true,
+      "ms": 540,
+      "model": null,
+      "fallback": false,
       "gate_ok": true
     },
     {
@@ -355,12 +674,18 @@
         "skills:Languages",
         "contact",
         "set:aegisops:step2",
-        "set:literature-rag:check",
         "set:sports-analytics:step3",
-        "set:literature-rag:step3"
+        "set:literature-rag:step3",
+        "origin",
+        "set:literature-rag:step5",
+        "set:sports-analytics"
       ],
       "confident": false,
-      "max_dense": 0.532,
+      "answer": "I can only answer from what's written on this site about Lokesh's work, projects and skills, and I couldn't find that here. You can ask him directly at lokesh8946891910@gmail.com.",
+      "abstained": true,
+      "ms": 447,
+      "model": null,
+      "fallback": false,
       "gate_ok": true
     },
     {
@@ -370,11 +695,17 @@
         "set:rally:step1",
         "set:rally:step3",
         "set:aegisops:step2",
-        "set:literature-rag:check",
-        "set:literature-rag:step4"
+        "set:literature-rag:step4",
+        "set:literature-rag:step5",
+        "set:sports-analytics:step3",
+        "set:literature-rag:step1"
       ],
       "confident": false,
-      "max_dense": 0.53,
+      "answer": "I can only answer from what's written on this site about Lokesh's work, projects and skills, and I couldn't find that here. You can ask him directly at lokesh8946891910@gmail.com.",
+      "abstained": true,
+      "ms": 438,
+      "model": null,
+      "fallback": false,
       "gate_ok": true
     },
     {
@@ -383,12 +714,18 @@
         "set:aegisops:step3",
         "skills:AI Systems",
         "set:aegisops",
+        "set:aegisops:step5",
         "set:aegisops:check",
         "set:literature-rag:check",
-        "set:aegisops:step5"
+        "set:rally:step1",
+        "skills:Frameworks"
       ],
       "confident": false,
-      "max_dense": 0.573,
+      "answer": "I can only answer from what's written on this site about Lokesh's work, projects and skills, and I couldn't find that here. You can ask him directly at lokesh8946891910@gmail.com.",
+      "abstained": true,
+      "ms": 462,
+      "model": null,
+      "fallback": false,
       "gate_ok": true
     },
     {
@@ -399,10 +736,16 @@
         "role:Prescience Insilico Pvt Ltd",
         "contact",
         "role:HashInclude Computech Pvt Ltd",
-        "certifications"
+        "certifications",
+        "skills:Languages",
+        "education"
       ],
       "confident": false,
-      "max_dense": 0.558,
+      "answer": "I can only answer from what's written on this site about Lokesh's work, projects and skills, and I couldn't find that here. You can ask him directly at lokesh8946891910@gmail.com.",
+      "abstained": true,
+      "ms": 496,
+      "model": null,
+      "fallback": false,
       "gate_ok": true
     },
     {
@@ -412,11 +755,17 @@
         "set:sports-analytics:step5",
         "profile",
         "origin",
+        "set:sports-analytics:check",
         "set:sports-analytics:step2",
-        "set:literature-rag"
+        "set:literature-rag",
+        "set:rally"
       ],
       "confident": false,
-      "max_dense": 0.566,
+      "answer": "I can only answer from what's written on this site about Lokesh's work, projects and skills, and I couldn't find that here. You can ask him directly at lokesh8946891910@gmail.com.",
+      "abstained": true,
+      "ms": 455,
+      "model": null,
+      "fallback": false,
       "gate_ok": true
     }
   ]

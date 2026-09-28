@@ -24,7 +24,7 @@ EMBED_DIM = 768
 # does not, so it only gates when the embedding call is unavailable.
 MIN_DENSE = 0.62
 MIN_BM25 = 2.5
-TOP_K = 6
+TOP_K = 8
 
 STOPWORDS = set(
     "a an and are as at be by did do does for from has have he her him his how i in is it its me my of on or "
@@ -78,7 +78,9 @@ def build_chunks(content: dict) -> list[Chunk]:
         for i, step in enumerate(s["steps"], 1):
             chunks.append(Chunk(f"set:{s['id']}:step{i}", f"{name}: {step['title']}", f"{name}, {step['title']}: {step['detail']}"))
         c = s["check"]
-        chunks.append(Chunk(f"set:{s['id']}:check", f"{name}: {c['title']}", f"{name}, check step, {c['title']}: {c['detail']}"))
+        chunks.append(
+            Chunk(f"set:{s['id']}:check", f"{name}: {c['title']}", f"{name}, check step, {c['title']}: {c['detail']} Results: {metrics}.")
+        )
     for r in content["experience"]:
         chunks.append(
             Chunk(
