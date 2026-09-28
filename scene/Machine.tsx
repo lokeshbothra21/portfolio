@@ -129,7 +129,7 @@ export function MachineParts({ chat, portal }: { chat: Chat; portal: RefObject<H
     }
     // Retrieval lights pulse while searching.
     lights.current.forEach((m, i) => {
-      m.emissiveIntensity = stage === "retrieving" ? 0.6 + 0.6 * Math.sin(state.clock.elapsedTime * 10 + i * 2) : 0.08;
+      m.emissiveIntensity = stage === "retrieving" ? 1.6 + 1.3 * Math.sin(state.clock.elapsedTime * 10 + i * 2) : 0.15;
     });
   });
 

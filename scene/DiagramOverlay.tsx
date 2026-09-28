@@ -44,7 +44,7 @@ function Label({ m, active, onSelect, hovered, setHovered, portal }: { m: Mod; a
 function Packet({ path, offset }: { path: [number, number][]; offset: number }) {
   const ref = useRef<THREE.Mesh>(null);
   const geometry = useMemo(() => brickGeometry(1, 1, 1, true, false), []);
-  const material = useMemo(() => new THREE.MeshStandardMaterial({ color: COLOURS.yellow, emissive: COLOURS.yellow, emissiveIntensity: 0.35, roughness: 0.3 }), []);
+  const material = useMemo(() => new THREE.MeshStandardMaterial({ color: COLOURS.yellow, emissive: COLOURS.yellow, emissiveIntensity: 1.8, roughness: 0.3 }), []);
   const points = useMemo(() => path.map(([x, z]) => new THREE.Vector3(x + 0.5, PLATE + 0.2, z + 0.5)), [path]);
 
   useFrame((state) => {
@@ -63,6 +63,33 @@ function Packet({ path, offset }: { path: [number, number][]; offset: number }) 
 }
 
 /** `portal` is a stable HTML layer over the canvas; labels mount there so they never get lost when the canvas wires up its events. */
+/** A glowing frame on the baseplate around a module: marks what's new in this step, or what's under the pointer. */
+function Outline({ m, strength }: { m: Mod; strength: number }) {
+  const ref = useRef<THREE.MeshStandardMaterial>(null);
+  useFrame((state) => {
+    if (ref.current) ref.current.emissiveIntensity = strength * (1.6 + 0.6 * Math.sin(state.clock.elapsedTime * 3));
+  });
+  const pad = 0.25;
+  const [x0, z0, x1, z1] = [m.x - pad, m.z - pad, m.x + m.w + pad, m.z + m.d + pad];
+  const t = 0.12;
+  const bars: [number, number, number, number][] = [
+    [(x0 + x1) / 2, z0, x1 - x0 + t, t],
+    [(x0 + x1) / 2, z1, x1 - x0 + t, t],
+    [x0, (z0 + z1) / 2, t, z1 - z0],
+    [x1, (z0 + z1) / 2, t, z1 - z0],
+  ];
+  return (
+    <group>
+      {bars.map(([x, z, w, d], i) => (
+        <mesh key={i} position={[x, 0.24, z]}>
+          <boxGeometry args={[w, 0.06, d]} />
+          <meshStandardMaterial ref={i === 0 ? ref : undefined} color={COLOURS.yellow} emissive={COLOURS.yellow} emissiveIntensity={1.6 * strength} toneMapped={false} />
+        </mesh>
+      ))}
+    </group>
+  );
+}
+
 export function DiagramOverlay({ laid, step, onSelect, portal }: { laid: LaidOut; step: number; onSelect: (step: number) => void; portal: RefObject<HTMLDivElement | null> }) {
   const [hovered, setHovered] = useState<string | null>(null);
   const { w, d } = laid.build.base;
@@ -91,8 +118,9 @@ export function DiagramOverlay({ laid, step, onSelect, portal }: { laid: LaidOut
               }}
             >
               <boxGeometry args={[m.w + 0.2, m.top + 0.3, m.d + 0.2]} />
-              <meshBasicMaterial transparent opacity={hovered === m.id ? 0.12 : 0} color={COLOURS.yellow} depthWrite={false} />
+              <meshBasicMaterial transparent opacity={0} depthWrite={false} />
             </mesh>
+            {(m.step === step || hovered === m.id) && m.rejectAt === undefined && <Outline m={m} strength={hovered === m.id ? 1.3 : 1} />}
             <Label m={m} active={m.step === step} hovered={hovered === m.id} setHovered={setHovered} onSelect={() => onSelect(m.step)} portal={portal} />
           </group>
         ))}

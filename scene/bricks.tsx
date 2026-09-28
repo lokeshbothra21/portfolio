@@ -5,6 +5,7 @@ import { useFrame } from "@react-three/fiber";
 import { useMemo, useRef } from "react";
 import * as THREE from "three";
 import { mergeGeometries } from "three/examples/jsm/utils/BufferGeometryUtils.js";
+import { RoundedBoxGeometry } from "three/examples/jsm/geometries/RoundedBoxGeometry.js";
 
 export const PLATE = 0.4;
 const GAP = 0.02; // tiny seam between neighbouring bricks
@@ -58,7 +59,7 @@ export function brickGeometry(w: number, d: number, h: number, tile: boolean, ro
   const parts: THREE.BufferGeometry[] = [];
   const body = round
     ? new THREE.CylinderGeometry(w / 2 - GAP, w / 2 - GAP, height, 24)
-    : new THREE.BoxGeometry(w - GAP * 2, height, d - GAP * 2);
+    : new RoundedBoxGeometry(w - GAP * 2, height, d - GAP * 2, 2, Math.min(0.06, height / 4));
   parts.push(body.toNonIndexed());
   if (!tile) {
     for (let i = 0; i < w; i++) {
@@ -69,27 +70,30 @@ export function brickGeometry(w: number, d: number, h: number, tile: boolean, ro
       }
     }
   }
+  // Each part keeps its own normals, so rounded edges and studs stay smooth.
   const merged = mergeGeometries(parts, false);
-  merged.computeVertexNormals();
   geometryCache.set(key, merged);
   return merged;
 }
 
-const materialCache = new Map<string, THREE.MeshStandardMaterial>();
+const materialCache = new Map<string, THREE.MeshPhysicalMaterial>();
 
 function brickMaterial(c: Colour, glow = false) {
   const key = `${c}${glow ? "*" : ""}`;
   const hit = materialCache.get(key);
   if (hit) return hit;
   const trans = c.startsWith("trans-");
-  const m = new THREE.MeshStandardMaterial({
+  // Glossy ABS: a clearcoat over a slightly rough base. Glow colours run above 1 so bloom picks them up.
+  const m = new THREE.MeshPhysicalMaterial({
     color: COLOURS[c],
-    roughness: trans ? 0.1 : 0.32,
+    roughness: trans ? 0.08 : 0.38,
+    clearcoat: trans ? 0.2 : 0.55,
+    clearcoatRoughness: 0.22,
     metalness: 0,
     transparent: trans,
     opacity: trans ? 0.62 : 1,
     emissive: glow ? COLOURS[c] : "#000000",
-    emissiveIntensity: glow ? 0.9 : 0,
+    emissiveIntensity: glow ? 1.6 : 0,
   });
   materialCache.set(key, m);
   return m;
@@ -141,7 +145,7 @@ export function Brick({ spec, shown, delay = 0, instant = false, exit = "lift" }
       mesh.position.set(x, y + (1 - p) * 3, z);
       mesh.scale.setScalar(Math.max(p, 0.001));
     }
-    if (spec.glow) (mesh.material as THREE.MeshStandardMaterial).emissiveIntensity = 0.5 + 0.5 * Math.sin(state.clock.elapsedTime * 5);
+    if (spec.glow) (mesh.material as THREE.MeshPhysicalMaterial).emissiveIntensity = 1.2 + 1.2 * Math.sin(state.clock.elapsedTime * 4);
   });
 
   return <mesh ref={ref} geometry={geometry} material={material} castShadow receiveShadow />;

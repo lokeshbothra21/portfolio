@@ -1,6 +1,6 @@
 "use client";
 
-import { OrbitControls } from "@react-three/drei";
+import { OrbitControls, PerformanceMonitor } from "@react-three/drei";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import Link from "next/link";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
@@ -14,15 +14,17 @@ import { DiagramOverlay } from "./DiagramOverlay";
 import type { LaidOut } from "./diagrams";
 import { laidOut } from "./sets";
 import { MachineParts } from "./Machine";
+import { COLOURS } from "./bricks";
 import { PanelBack, PanelCover, PanelMachine, PanelSet } from "./panels";
+import { Effects, Studio, tinted } from "./Studio";
 
-type Page = { id: string; label: string; build?: Build; set?: BrickSet; laid?: LaidOut };
+type Page = { id: string; label: string; accent: string; build?: Build; set?: BrickSet; laid?: LaidOut };
 
 const PAGES: Page[] = [
-  { id: "cover", label: "Cover", build: cover },
-  ...sets.filter((s) => laidOut[s.id]).map((s) => ({ id: s.id, label: `Set #${s.number} ${s.name}`, build: laidOut[s.id].build, set: s, laid: laidOut[s.id] })),
-  { id: "machine", label: "The Technic machine", build: machine },
-  { id: "back", label: "Back cover", build: cover },
+  { id: "cover", label: "Cover", accent: COLOURS.yellow, build: cover },
+  ...sets.filter((s) => laidOut[s.id]).map((s) => ({ id: s.id, label: `Set #${s.number} ${s.name}`, accent: COLOURS[s.colour], build: laidOut[s.id].build, set: s, laid: laidOut[s.id] })),
+  { id: "machine", label: "The Technic machine", accent: COLOURS.azure, build: machine },
+  { id: "back", label: "Back cover", accent: COLOURS.red, build: cover },
 ];
 
 function readUrl(): { page: number; step: number } {
@@ -33,11 +35,17 @@ function readUrl(): { page: number; step: number } {
   return { page, step };
 }
 
-/** Eases the camera to each page's viewpoint, then hands control to the visitor. */
-function CameraRig({ build }: { build: Build }) {
+/**
+ * Eases the camera to each page's viewpoint, then drifts gently around it.
+ * Dragging takes over; the drift resumes from wherever the visitor leaves it.
+ */
+function CameraRig({ build, drift }: { build: Build; drift: boolean }) {
   const controls = useThree((s) => s.controls) as OrbitControlsImpl | null;
   const camera = useThree((s) => s.camera);
-  const moving = useRef(true);
+  const mode = useRef<"moving" | "idle" | "user">("moving");
+  const idleSince = useRef(0);
+  const releasedAt = useRef(0);
+  const base = useRef(new THREE.Vector3());
   const goal = useMemo(() => {
     const off = new THREE.Vector3(build.base.w / 2, 0, build.base.d / 2);
     return {
@@ -47,19 +55,43 @@ function CameraRig({ build }: { build: Build }) {
   }, [build]);
 
   useEffect(() => {
-    moving.current = true;
-    const stop = () => (moving.current = false);
-    controls?.addEventListener("start", stop);
-    return () => controls?.removeEventListener("start", stop);
+    mode.current = "moving";
+    const grab = () => (mode.current = "user");
+    const release = () => (releasedAt.current = performance.now());
+    controls?.addEventListener("start", grab);
+    controls?.addEventListener("end", release);
+    return () => {
+      controls?.removeEventListener("start", grab);
+      controls?.removeEventListener("end", release);
+    };
   }, [goal, controls]);
 
-  useFrame((_, dt) => {
-    if (!moving.current || !controls) return;
-    const k = 1 - Math.exp(-dt * 3);
-    camera.position.lerp(goal.position, k);
-    controls.target.lerp(goal.target, k);
-    controls.update();
-    if (camera.position.distanceTo(goal.position) < 0.02) moving.current = false;
+  useFrame((state, dt) => {
+    if (!controls) return;
+    const now = state.clock.elapsedTime;
+    if (mode.current === "moving") {
+      const k = 1 - Math.exp(-dt * 3);
+      camera.position.lerp(goal.position, k);
+      controls.target.lerp(goal.target, k);
+      controls.update();
+      if (camera.position.distanceTo(goal.position) < 0.02) {
+        mode.current = "idle";
+        idleSince.current = now;
+        base.current.copy(goal.position);
+      }
+    } else if (mode.current === "user") {
+      if (drift && releasedAt.current && performance.now() - releasedAt.current > 5000) {
+        mode.current = "idle";
+        idleSince.current = now;
+        base.current.copy(camera.position);
+      }
+    } else if (drift) {
+      // A slow sway of about ±6° around the build.
+      const angle = Math.sin((now - idleSince.current) * 0.18) * 0.1;
+      const offset = base.current.clone().sub(controls.target).applyAxisAngle(THREE.Object3D.DEFAULT_UP, angle);
+      camera.position.copy(controls.target).add(offset);
+      controls.update();
+    }
   });
   return null;
 }
@@ -93,6 +125,8 @@ export default function Tour() {
   // The tour only ever renders in the browser (loaded with ssr: false), so it can read the URL up front.
   const [{ page, step }, setPos] = useState(readUrl);
   const [reducedMotion] = useState(() => window.matchMedia("(prefers-reduced-motion: reduce)").matches);
+  // Contact shading and glow on capable screens; dropped automatically if the frame rate sags.
+  const [fx, setFx] = useState(() => window.innerWidth >= 768 && (navigator.hardwareConcurrency ?? 4) >= 4);
   const current = PAGES[page];
   const steps = current.build?.steps.length ?? 1;
   const chat = useAsk();
@@ -131,25 +165,18 @@ export default function Tour() {
   }, [next, prev]);
 
   return (
-    <div className="fixed inset-0 overflow-hidden bg-[radial-gradient(ellipse_at_top,#fff8e6,#f1e6cf_55%,#e2d3b3)]">
-      <Canvas shadows dpr={[1, 1.75]} camera={{ fov: 35, position: [0, 10, 26] }} aria-hidden="true">
-        <hemisphereLight args={["#fff6e0", "#8a7a60", 0.9]} />
-        <directionalLight
-          position={[10, 18, 12]}
-          intensity={2.2}
-          castShadow
-          shadow-mapSize={[2048, 2048]}
-          shadow-camera-left={-14}
-          shadow-camera-right={14}
-          shadow-camera-top={14}
-          shadow-camera-bottom={-14}
-          shadow-bias={-0.0004}
-        />
-        <directionalLight position={[-12, 8, -6]} intensity={0.6} color="#cfe3ff" />
+    <div
+      className="fixed inset-0 overflow-hidden transition-[background] duration-700"
+      style={{ background: `radial-gradient(ellipse at 55% 35%, #fffaf2 0%, ${tinted(current.accent, 0.16)} 50%, ${tinted(current.accent, 0.42)} 110%)` }}
+    >
+      <Canvas shadows="soft" dpr={[1, 1.75]} camera={{ fov: 35, position: [0, 10, 26] }} gl={{ alpha: true }} aria-hidden="true">
+        <PerformanceMonitor onDecline={() => setFx(false)} />
+        <Studio />
+        {fx && <Effects />}
         {current.build && <BuildScene key={current.id} build={current.build} step={step} instant={reducedMotion} />}
         {current.laid && <DiagramOverlay key={`${current.id}-overlay`} laid={current.laid} step={step} onSelect={(s) => setPos({ page, step: s })} portal={labels} />}
         {current.id === "machine" && <MachineParts chat={chat} portal={labels} />}
-        {current.build && <CameraRig build={current.build} />}
+        {current.build && <CameraRig build={current.build} drift={!reducedMotion} />}
         <ViewShift />
         <OrbitControls makeDefault enablePan={false} enableDamping minDistance={10} maxDistance={40} maxPolarAngle={Math.PI * 0.46} />
       </Canvas>
