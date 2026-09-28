@@ -76,7 +76,7 @@ Each phase ends deployed and working; it's fine to stop after any of them.
 - Deep links: `?set=aegisops&step=3`
 - **Done when:** the tour runs smoothly on a laptop and falls back cleanly on a phone
 
-### Phase 4: Technic machine visuals + remaining sets (ongoing)
+### Phase 4: Technic machine visuals + remaining sets ✅ done
 - The chat as a 3D Technic machine: question brick moves along conveyors synced to the real trace events
 - Sets #02–#04, parts inventory bins, origin story, back cover
 - Optional: sound, physics, Easter eggs

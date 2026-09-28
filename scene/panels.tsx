@@ -3,6 +3,7 @@
 // Booklet panels shown over the 3D scene. All text lives here, not in the canvas,
 // so it stays sharp, selectable and readable by screen readers.
 import { bg, Part } from "@/components/booklet";
+import { AnswerView, AskForm, TraceList, type Chat } from "@/components/chat";
 import { profile, sets, type BrickSet } from "@/content/content";
 
 export function PanelCover({ onStart }: { onStart: () => void }) {
@@ -132,6 +133,29 @@ export function PanelBack() {
           </li>
         ))}
       </ul>
+    </div>
+  );
+}
+
+export function PanelMachine({ chat }: { chat: Chat }) {
+  return (
+    <div>
+      <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.2em] text-ink-soft">The Technic machine</p>
+      <h2 className="mt-1 font-display text-2xl font-black">Ask the booklet</h2>
+      <p className="mt-1 text-sm leading-relaxed text-ink-soft">
+        Drop a question in and watch it ride the belt: retrieval arch, confidence gate (off-topic questions fall in the red
+        bin), the LLM gearbox, then the verify stamp. Every move is a real pipeline event.
+      </p>
+      <div className="mt-4" aria-live="polite">
+        <AnswerView chat={chat} compact />
+      </div>
+      <AskForm chat={chat} id="tour-question" compact />
+      <details className="mt-4 rounded-xl bg-ink p-3 text-white">
+        <summary className="cursor-pointer font-display text-sm font-bold">What just happened</summary>
+        <div className="mt-3">
+          <TraceList chat={chat} />
+        </div>
+      </details>
     </div>
   );
 }

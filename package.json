@@ -11,7 +11,7 @@
     "corpus": "node --no-warnings scripts/export-content.mjs && .venv/bin/python scripts/build_corpus.py",
     "eval": ".venv/bin/python scripts/eval.py",
     "test:api": ".venv/bin/python -m pytest -q -W ignore::DeprecationWarning tests",
-    "prebuild": "node --no-warnings scripts/check-content.mjs"
+    "prebuild": "node --no-warnings scripts/check-content.mjs && node --no-warnings scripts/check-builds.mjs"
   },
   "dependencies": {
     "@react-three/drei": "^10.7.9",

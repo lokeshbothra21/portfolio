@@ -6,16 +6,19 @@ import Link from "next/link";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import * as THREE from "three";
 import type { OrbitControls as OrbitControlsImpl } from "three-stdlib";
+import { useAsk } from "@/components/chat";
 import { profile, sets, type BrickSet } from "@/content/content";
 import { BuildScene } from "./BuildScene";
-import { cover, setBuilds, type Build } from "./builds";
-import { PanelBack, PanelCover, PanelSet } from "./panels";
+import { cover, machine, setBuilds, type Build } from "./builds";
+import { MachineParts } from "./Machine";
+import { PanelBack, PanelCover, PanelMachine, PanelSet } from "./panels";
 
 type Page = { id: string; label: string; build?: Build; set?: BrickSet };
 
 const PAGES: Page[] = [
   { id: "cover", label: "Cover", build: cover },
   ...sets.filter((s) => setBuilds[s.id]).map((s) => ({ id: s.id, label: `Set #${s.number} ${s.name}`, build: setBuilds[s.id], set: s })),
+  { id: "machine", label: "The Technic machine", build: machine },
   { id: "back", label: "Back cover", build: cover },
 ];
 
@@ -89,6 +92,7 @@ export default function Tour() {
   const [reducedMotion] = useState(() => window.matchMedia("(prefers-reduced-motion: reduce)").matches);
   const current = PAGES[page];
   const steps = current.build?.steps.length ?? 1;
+  const chat = useAsk();
 
   useEffect(() => {
     const q = new URLSearchParams({ page: current.id });
@@ -139,6 +143,7 @@ export default function Tour() {
         />
         <directionalLight position={[-12, 8, -6]} intensity={0.6} color="#cfe3ff" />
         {current.build && <BuildScene key={current.id} build={current.build} step={step} instant={reducedMotion} />}
+        {current.id === "machine" && <MachineParts chat={chat} />}
         {current.build && <CameraRig build={current.build} />}
         <ViewShift />
         <OrbitControls makeDefault enablePan={false} enableDamping minDistance={10} maxDistance={40} maxPolarAngle={Math.PI * 0.46} />
@@ -164,6 +169,7 @@ export default function Tour() {
         <div className="pointer-events-auto max-h-[46vh] overflow-y-auto rounded-2xl border-2 border-ink bg-card/95 p-5 shadow-[5px_5px_0_var(--ink)] backdrop-blur sm:max-h-[calc(100vh-11rem)]">
           {current.id === "cover" && <PanelCover onStart={next} />}
           {current.set && <PanelSet set={current.set} step={step} steps={steps} onStep={(s) => setPos({ page, step: s })} />}
+          {current.id === "machine" && <PanelMachine chat={chat} />}
           {current.id === "back" && <PanelBack />}
         </div>
       </div>

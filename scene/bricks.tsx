@@ -50,7 +50,7 @@ export type BrickSpec = {
 
 const geometryCache = new Map<string, THREE.BufferGeometry>();
 
-function brickGeometry(w: number, d: number, h: number, tile: boolean, round: boolean) {
+export function brickGeometry(w: number, d: number, h: number, tile: boolean, round: boolean) {
   const key = `${w}x${d}x${h}${tile ? "t" : ""}${round ? "r" : ""}`;
   const hit = geometryCache.get(key);
   if (hit) return hit;

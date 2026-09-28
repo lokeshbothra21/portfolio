@@ -14,6 +14,13 @@ npm run api     # Python chat API on :8000 (loads .env.local via your shell)
 npm run dev     # site on :3000, proxies /api to :8000
 ```
 
+## 3D tour
+
+`/tour` is an instruction-booklet tour built with React Three Fiber. Builds live in `scene/builds.ts`: each set has one
+step per content step, plus an intro and a check step (the build fails if they drift apart). Bricks drop in per step;
+bricks listed in a step's `reject` are thrown off by the verifier. The Technic machine page (`scene/Machine.tsx`) is
+driven by the live chat stream.
+
 ## Editing content
 
 All content lives in `content/content.ts`. After editing it, rebuild the chat corpus and commit the result:
