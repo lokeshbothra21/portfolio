@@ -11,6 +11,7 @@ export type BuildStep = {
 export type BrickSet = {
   id: string;
   number: string;
+  colour: SkillBin["colour"];
   name: string;
   tagline: string;
   context: string;
@@ -45,13 +46,15 @@ export const profile = {
   name: "Lokesh Bothra",
   title: "AI Engineer",
   location: "Bangalore, India",
+  url: "https://lokeshbothra.vercel.app",
   tagline: "I build AI systems that check their own work.",
   intro:
     "AI engineer building production agentic and RAG systems for enterprise knowledge and scientific computing. " +
     "LangGraph, multi-agent orchestration, hybrid retrieval, LLM evaluation, FastAPI and GCP. " +
     "The common thread in my work: agents that verify their evidence, abstain when unsure, and prove their quality with numbers.",
   email: "lokesh8946891910@gmail.com",
-  resume: "/Lokesh_Bothra_Resume.pdf",
+  // Empty until a public copy exists (no current employer name, no phone). The button hides while empty.
+  resume: "" as string,
   links: {
     github: "https://github.com/lokeshbothra21",
     linkedin: "https://www.linkedin.com/in/lokeshbothra/",
@@ -63,6 +66,7 @@ export const sets: BrickSet[] = [
   {
     id: "aegisops",
     number: "01",
+    colour: "red",
     name: "AegisOps",
     tagline: "Autonomous incident-response agent",
     context: "Open source · in progress",
@@ -122,6 +126,7 @@ export const sets: BrickSet[] = [
   {
     id: "literature-rag",
     number: "02",
+    colour: "blue",
     name: "Scientific Literature RAG",
     tagline: "Question answering over research PDFs",
     context: "Production platform · current role",
@@ -166,6 +171,7 @@ export const sets: BrickSet[] = [
   {
     id: "sports-analytics",
     number: "03",
+    colour: "green",
     name: "AI Sports Analytics",
     tagline: "Ask your data in plain English, get charts back",
     context: "HashInclude Computech",
@@ -209,6 +215,7 @@ export const sets: BrickSet[] = [
   {
     id: "rally",
     number: "04",
+    colour: "orange",
     name: "Rally",
     tagline: "AI-powered enterprise assistant",
     context: "HashInclude Computech",

@@ -1,26 +1,65 @@
 @import "tailwindcss";
 
+/* Instruction-booklet palette: printed paper, ink, and classic brick colours. */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --paper: #f6f1e7;
+  --card: #fffdf8;
+  --ink: #1b1d24;
+  --ink-soft: #545866;
+  --line: #e2dccd;
+  --callout: #dbe7f3; /* the pale blue parts box in real building manuals */
+  --brick-red: #c91a1a;
+  --brick-yellow: #f2c230;
+  --brick-blue: #0a57b8;
+  --brick-green: #1f7a3f;
+  --brick-orange: #f07d18;
+  --brick-purple: #6b3fa0;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-paper: var(--paper);
+  --color-card: var(--card);
+  --color-ink: var(--ink);
+  --color-ink-soft: var(--ink-soft);
+  --color-line: var(--line);
+  --color-callout: var(--callout);
+  --color-brick-red: var(--brick-red);
+  --color-brick-yellow: var(--brick-yellow);
+  --color-brick-blue: var(--brick-blue);
+  --color-brick-green: var(--brick-green);
+  --color-brick-orange: var(--brick-orange);
+  --color-brick-purple: var(--brick-purple);
+  --font-sans: var(--font-body);
+  --font-display: var(--font-display);
+  --font-mono: var(--font-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  scroll-behavior: smooth;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--paper);
+  color: var(--ink);
+}
+
+/* A row of studs, used as a divider and on brick tops. */
+.studs {
+  background-image: radial-gradient(circle at center, currentColor 0 38%, transparent 40%);
+  background-size: 18px 18px;
+  background-repeat: repeat-x;
+  background-position: left center;
+}
+
+/* Brick-like block: flat colour with a darker bottom edge. */
+.brick {
+  box-shadow:
+    inset 0 -4px 0 rgb(0 0 0 / 0.18),
+    0 1px 0 rgb(0 0 0 / 0.06);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
 }

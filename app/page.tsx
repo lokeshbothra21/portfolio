@@ -1,22 +1,40 @@
+import { SectionHeading, StudDivider } from "@/components/booklet";
+import { Cover } from "@/components/Cover";
+import { BackCover, BonusPieces, Experience, Nav, Origin, PartsInventory } from "@/components/sections";
+import { SetSpread } from "@/components/SetSpread";
 import { profile, sets } from "@/content/content";
 
-// Phase 0 placeholder. Replaced by the plain booklet page in Phase 1.
+// The plain booklet page: everything a recruiter needs, no 3D required.
 export default function Home() {
   return (
-    <main className="mx-auto flex w-full max-w-3xl flex-1 flex-col justify-center gap-6 px-6 py-24">
-      <p className="font-mono text-sm uppercase tracking-widest text-zinc-500">
-        Set 2026 · {sets.length} sets inside · under construction
-      </p>
-      <h1 className="text-5xl font-bold tracking-tight">{profile.name}</h1>
-      <p className="text-xl text-zinc-600">
-        {profile.title}. {profile.tagline}
-      </p>
-      <nav className="flex flex-wrap gap-4 text-sm font-medium underline underline-offset-4">
-        <a href={profile.links.github}>GitHub</a>
-        <a href={profile.links.linkedin}>LinkedIn</a>
-        <a href={profile.links.leetcode}>LeetCode</a>
-        <a href={`mailto:${profile.email}`}>Email</a>
-      </nav>
-    </main>
+    <>
+      <Nav />
+      <main id="top" className="mx-auto w-full max-w-6xl flex-1 space-y-16 px-4 py-8 sm:space-y-20 sm:px-6 sm:py-12">
+        <Cover />
+
+        <section className="space-y-8">
+          <SectionHeading id="sets" kicker={`${sets.length} sets in this box`} title="The builds">
+            Each set shows how the system was put together, step by step. Every build ends with a check step, because the
+            thing I care about most is AI that proves its own answers.
+          </SectionHeading>
+          <div className="space-y-8">
+            {sets.map((set) => (
+              <SetSpread key={set.id} set={set} />
+            ))}
+          </div>
+        </section>
+
+        <StudDivider />
+        <PartsInventory />
+        <StudDivider />
+        <Experience />
+        <Origin />
+        <BonusPieces />
+        <BackCover />
+      </main>
+      <footer className="mx-auto w-full max-w-6xl px-4 pb-10 font-mono text-xs text-ink-soft sm:px-6">
+        © {new Date().getFullYear()} {profile.name}. Brick-style illustrations are original and not affiliated with any toy brand.
+      </footer>
+    </>
   );
 }
