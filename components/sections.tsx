@@ -18,6 +18,9 @@ export function Nav() {
         <a href="#top" className="brick mr-auto shrink-0 rounded-md bg-ink px-3 py-1.5 font-display text-sm font-extrabold uppercase tracking-widest text-white">
           LB
         </a>
+        <a href="/tour" className="order-last ml-1 shrink-0 rounded-md bg-brick-yellow px-2.5 py-1.5 font-display text-sm font-bold sm:px-3">
+          3D tour
+        </a>
         <ul className="flex gap-1 overflow-x-auto text-sm font-semibold">
           {links.map(([label, href, onPhones]) => (
             <li key={href} className={onPhones ? "" : "hidden sm:block"}>

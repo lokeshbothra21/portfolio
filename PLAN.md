@@ -68,7 +68,7 @@ Each phase ends deployed and working; it's fine to stop after any of them.
 - Plain 2D chat UI with trace panel on the plain page
 - **Done when:** chat answers grounded questions, declines salary/off-topic ones, eval score reported
 
-### Phase 3: Booklet cover + Set #01 in 3D (≈ 2–3 weekends)
+### Phase 3: Booklet cover + Set #01 in 3D (≈ 2–3 weekends) ✅ done
 - Lazy-loaded 3D canvas, "Tour / Read as page" toggle, auto-fallback to page on weak devices
 - Brick primitives (procedural boxes + studs), camera rig, step navigation (Next / Prev / arrow keys)
 - Cover box art scene

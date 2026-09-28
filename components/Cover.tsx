@@ -28,6 +28,9 @@ export function Cover() {
           <p className="mt-4 max-w-xl leading-relaxed text-ink-soft">{profile.intro}</p>
 
           <div className="mt-8 flex flex-wrap gap-3">
+            <a href="/tour" className="brick rounded-lg bg-brick-yellow px-5 py-3 font-display font-bold text-ink transition hover:-translate-y-0.5">
+              Take the 3D tour
+            </a>
             <a href="#sets" className="brick rounded-lg bg-ink px-5 py-3 font-display font-bold text-white transition hover:-translate-y-0.5">
               Open the sets
             </a>
