@@ -120,8 +120,11 @@ def test_falls_back_to_next_model_then_to_passages(fake):
 
     fake(["unused"], fail_first=99)
     evts = collect("Tell me about AegisOps")
-    done = events(evts, "done")[0]
-    assert done["fallback"] is True and events(evts, "verify")[0]["passed"] is True
+    answer = events(evts, "answer")[0]
+    assert events(evts, "done")[0]["fallback"] is True and answer["fallback"] is True
+    assert 1 <= len(answer["passages"]) <= chat.FALLBACK_PASSAGES
+    assert all(p["text"] in {c.text for c in chat.retriever.chunks} for p in answer["passages"])  # verbatim quotes
+    assert events(evts, "verify") == []  # nothing generated, nothing to verify
 
 
 def test_rate_limit(monkeypatch):

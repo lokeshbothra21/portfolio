@@ -54,7 +54,7 @@ def build_chunks(content: dict) -> list[Chunk]:
         Chunk(
             "profile",
             "About Lokesh",
-            f"{p['name']} is an {p['title']} based in {p['location']}. {p['tagline']} {p['intro']}",
+            f"{p['name']} is an {p['title']} based in {p['location']}. In his own words: \"{p['tagline']} {p['intro']}\"",
         ),
         Chunk(
             "contact",
@@ -88,7 +88,7 @@ def build_chunks(content: dict) -> list[Chunk]:
             )
         )
     o = content["origin"]
-    chunks.append(Chunk("origin", o["title"], f"{o['title']} ({o['period']}, {o['org']}, {o['location']}): {o['story']}"))
+    chunks.append(Chunk("origin", o["title"], f"{o['title']} ({o['period']}, {o['org']}, {o['location']}). In his own words: \"{o['story']}\""))
     for b in content["skills"]:
         chunks.append(Chunk(f"skills:{b['name']}", f"Skills: {b['name']}", f"{b['name']} skills: {', '.join(b['parts'])}."))
     certs = "; ".join(f"{c['name']} ({c['issuer']}, {c['year']})" for c in content["certifications"])

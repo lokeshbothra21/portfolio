@@ -13,7 +13,8 @@ type Trace = {
   verify?: Verify;
   done?: { ms: number; model: string | null; tokens: number; fallback: boolean };
 };
-type Answer = { text: string; abstained: boolean; sources: Source[] };
+type Passage = { n: number; title: string; text: string };
+type Answer = { text: string; abstained: boolean; sources: Source[]; fallback?: boolean; passages?: Passage[] };
 
 const SUGGESTIONS = [
   "Why should we hire Lokesh?",
@@ -21,8 +22,6 @@ const SUGGESTIONS = [
   "How did he improve RAGAS answer correctness?",
   "What is your expected salary?",
 ];
-
-const EMPTY: Trace = { retries: [] };
 
 async function* readEvents(res: Response) {
   const reader = res.body!.getReader();
@@ -41,6 +40,27 @@ async function* readEvents(res: Response) {
       if (event && data) yield { event, data: JSON.parse(data) };
     }
   }
+}
+
+/** Plain text with URLs and email addresses made clickable. */
+function Linkified({ text }: { text: string }) {
+  return (
+    <>
+      {text.split(/(https?:\/\/[^\s,]+[^\s,.]|[\w.+-]+@[\w-]+\.[\w.]+[^\s,.])/).map((part, i) =>
+        /^https?:\/\//.test(part) ? (
+          <a key={i} href={part} className="underline underline-offset-2 [overflow-wrap:anywhere]">
+            {part.replace(/^https?:\/\/(www\.)?/, "").replace(/\/$/, "")}
+          </a>
+        ) : /@/.test(part) && !/\s/.test(part) ? (
+          <a key={i} href={`mailto:${part}`} className="underline underline-offset-2">
+            {part}
+          </a>
+        ) : (
+          <span key={i}>{part}</span>
+        ),
+      )}
+    </>
+  );
 }
 
 function WithCitations({ text, sources }: { text: string; sources: Source[] }) {
@@ -88,7 +108,7 @@ export function TechnicMachine() {
   const [busy, setBusy] = useState(false);
   const [streamed, setStreamed] = useState("");
   const [answer, setAnswer] = useState<Answer | null>(null);
-  const [trace, setTrace] = useState<Trace>(EMPTY);
+  const [trace, setTrace] = useState<Trace>({ retries: [] });
   const [error, setError] = useState("");
   const abort = useRef<AbortController | null>(null);
 
@@ -159,6 +179,18 @@ export function TechnicMachine() {
                   )}
                   {error && <span className="text-brick-red">{error}</span>}
                 </div>
+                {answer?.passages && (
+                  <ul className="mt-3 max-w-[92%] space-y-2">
+                    {answer.passages.map((p) => (
+                      <li key={p.n} className="rounded-xl border-l-4 border-brick-blue bg-card px-4 py-3 text-sm leading-relaxed">
+                        <p className="font-display font-bold">{p.title}</p>
+                        <p className="mt-1 text-ink-soft">
+                          <Linkified text={p.text} />
+                        </p>
+                      </li>
+                    ))}
+                  </ul>
+                )}
                 {answer && answer.sources.length > 0 && (
                   <ul className="mt-3 flex flex-wrap gap-1.5 text-xs">
                     {answer.sources.map((s) => (
@@ -232,9 +264,10 @@ export function TechnicMachine() {
             <Stage label="3 · Grounded answer (Gemini)" state={abstained ? "skipped" : t.generate ? (t.generate.fallback ? "warn" : "done") : stage(false, !!t.gate)}>
               {abstained && "skipped, no LLM call needed"}
               {t.retries.length > 0 && `${t.retries.length} model${t.retries.length > 1 ? "s" : ""} busy, failed over · `}
-              {t.generate && (t.generate.fallback ? "all models busy → showing source passages" : `${t.generate.model} · ${t.generate.ms} ms · ${t.generate.tokens} tokens`)}
+              {t.generate && (t.generate.fallback ? "all models busy → quoting the site instead" : `${t.generate.model} · ${t.generate.ms} ms · ${t.generate.tokens} tokens`)}
             </Stage>
-            <Stage label="4 · Verify citations and numbers" state={abstained ? "skipped" : t.verify ? (t.verify.passed ? "done" : "warn") : stage(false, !!t.generate)}>
+            <Stage label="4 · Verify citations and numbers" state={abstained || t.generate?.fallback ? "skipped" : t.verify ? (t.verify.passed ? "done" : "warn") : stage(false, !!t.generate)}>
+              {t.generate?.fallback && "skipped, passages are quoted verbatim"}
               {t.verify && `${t.verify.citations} citations · ${t.verify.numbers} numbers · ${t.verify.passed ? "all checked" : "flagged"}`}
             </Stage>
           </ol>

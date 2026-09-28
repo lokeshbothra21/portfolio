@@ -4,12 +4,13 @@ import { bg, Brick, SectionHeading } from "./booklet";
 const setName = Object.fromEntries(sets.map((s) => [s.id, `Set #${s.number} ${s.name}`]));
 
 export function Nav() {
-  const links = [
-    ["Sets", "#sets"],
-    ["Ask", "#machine"],
-    ["Parts", "#parts"],
-    ["Experience", "#experience"],
-    ["Contact", "#contact"],
+  // [label, href, shown on phones]
+  const links: [string, string, boolean][] = [
+    ["Sets", "#sets", true],
+    ["Ask", "#machine", true],
+    ["Parts", "#parts", false],
+    ["Experience", "#experience", false],
+    ["Contact", "#contact", true],
   ];
   return (
     <nav aria-label="Booklet" className="sticky top-0 z-10 border-b border-line bg-paper/90 backdrop-blur">
@@ -18,8 +19,8 @@ export function Nav() {
           LB
         </a>
         <ul className="flex gap-1 overflow-x-auto text-sm font-semibold">
-          {links.map(([label, href]) => (
-            <li key={href}>
+          {links.map(([label, href, onPhones]) => (
+            <li key={href} className={onPhones ? "" : "hidden sm:block"}>
               <a href={href} className="block rounded-md px-2.5 py-1.5 hover:bg-ink/5 sm:px-3">
                 {label}
               </a>

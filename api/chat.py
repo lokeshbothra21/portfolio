@@ -39,6 +39,8 @@ ABSTAIN = (
     f"and I couldn't find that here. You can ask him directly at {EMAIL}."
 )
 NOT_IN_CONTEXT = "NOT_IN_CONTEXT"
+FALLBACK = "The AI model is busy right now, so here's what the site says about this:"
+FALLBACK_PASSAGES = 2
 
 SYSTEM = f"""You answer questions about Lokesh Bothra, an AI engineer, for visitors to his portfolio site.
 
@@ -164,14 +166,17 @@ async def run(question: str) -> AsyncIterator[tuple[str, dict]]:
     gen_ms = round((time.perf_counter() - t) * 1000)
 
     if model_used is None:
-        # Every model is busy: fall back to showing the best passages verbatim.
-        top = r.hits[:2]
-        text = "The language model is busy right now, so here are the most relevant passages from the site. " + " ".join(
-            f"{h.chunk.text} [{i}]" for i, h in enumerate(top, 1)
-        )
+        # Every model is busy: quote the best passages instead of generating.
+        # The contact passage only earns a spot when it is the best match.
+        top = [h for i, h in enumerate(r.hits) if h.chunk.id != "contact" or i == 0][:FALLBACK_PASSAGES]
         yield "generate", {"ms": gen_ms, "model": None, "fallback": True}
-        yield "answer", {"text": text, "abstained": False, "sources": sources(r)[:2]}
-        yield "verify", verify(text, r.hits)
+        yield "answer", {
+            "text": FALLBACK,
+            "abstained": False,
+            "fallback": True,
+            "sources": [],
+            "passages": [{"n": i, "title": h.chunk.title, "text": h.chunk.text} for i, h in enumerate(top, 1)],
+        }
         yield "done", {"ms": round((time.perf_counter() - started) * 1000), "model": None, "tokens": 0, "fallback": True}
         return
 
