@@ -20,7 +20,7 @@ export type Answer = { text: string; abstained: boolean; sources: Source[]; fall
 export const SUGGESTIONS = [
   "Why should we hire Lokesh?",
   "How does AegisOps stop the LLM from making things up?",
-  "How did he improve RAGAS answer correctness?",
+  "How much did he improve RAGAS answer correctness?",
   "What is your expected salary?",
 ];
 
