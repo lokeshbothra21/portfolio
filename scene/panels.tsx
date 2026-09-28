@@ -63,6 +63,10 @@ export function PanelSet({ set, step, steps, onStep }: { set: BrickSet; step: nu
           <>
             <p className="font-mono text-xs font-semibold uppercase tracking-wider text-ink-soft">Box contents · {set.context}</p>
             <p className="mt-2 text-sm leading-relaxed">{set.summary}</p>
+            <p className="mt-2 text-xs text-ink-soft">
+              Each step adds real components of the system, wired together by conveyors that show how data flows. Yellow
+              labels are new in the current step.
+            </p>
             <ul className="mt-3 flex flex-wrap gap-1.5">
               {set.parts.map((p) => (
                 <Part key={p} name={p} />
@@ -101,7 +105,9 @@ export function PanelSet({ set, step, steps, onStep }: { set: BrickSet; step: nu
       </div>
 
       <div className="mt-4 flex items-center justify-between gap-2">
-        <span className="font-mono text-xs text-ink-soft">{isIntro ? "Box contents" : isCheck ? "Check step" : `Step ${step} of ${steps - 2}`}</span>
+        <span className="font-mono text-xs text-ink-soft">
+          {isIntro ? "Box contents" : isCheck ? "Check step" : `Step ${step} of ${steps - 2}`} · click any block
+        </span>
         {set.links?.map((l) => (
           <a key={l.href} href={l.href} className="rounded-md bg-ink px-2.5 py-1 font-display text-xs font-bold text-white">
             {l.label} ↗

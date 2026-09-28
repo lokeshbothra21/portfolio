@@ -9,15 +9,18 @@ import type { OrbitControls as OrbitControlsImpl } from "three-stdlib";
 import { useAsk } from "@/components/chat";
 import { profile, sets, type BrickSet } from "@/content/content";
 import { BuildScene } from "./BuildScene";
-import { cover, machine, setBuilds, type Build } from "./builds";
+import { cover, machine, type Build } from "./builds";
+import { DiagramOverlay } from "./DiagramOverlay";
+import type { LaidOut } from "./diagrams";
+import { laidOut } from "./sets";
 import { MachineParts } from "./Machine";
 import { PanelBack, PanelCover, PanelMachine, PanelSet } from "./panels";
 
-type Page = { id: string; label: string; build?: Build; set?: BrickSet };
+type Page = { id: string; label: string; build?: Build; set?: BrickSet; laid?: LaidOut };
 
 const PAGES: Page[] = [
   { id: "cover", label: "Cover", build: cover },
-  ...sets.filter((s) => setBuilds[s.id]).map((s) => ({ id: s.id, label: `Set #${s.number} ${s.name}`, build: setBuilds[s.id], set: s })),
+  ...sets.filter((s) => laidOut[s.id]).map((s) => ({ id: s.id, label: `Set #${s.number} ${s.name}`, build: laidOut[s.id].build, set: s, laid: laidOut[s.id] })),
   { id: "machine", label: "The Technic machine", build: machine },
   { id: "back", label: "Back cover", build: cover },
 ];
@@ -93,6 +96,7 @@ export default function Tour() {
   const current = PAGES[page];
   const steps = current.build?.steps.length ?? 1;
   const chat = useAsk();
+  const labels = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const q = new URLSearchParams({ page: current.id });
@@ -143,11 +147,14 @@ export default function Tour() {
         />
         <directionalLight position={[-12, 8, -6]} intensity={0.6} color="#cfe3ff" />
         {current.build && <BuildScene key={current.id} build={current.build} step={step} instant={reducedMotion} />}
-        {current.id === "machine" && <MachineParts chat={chat} />}
+        {current.laid && <DiagramOverlay key={`${current.id}-overlay`} laid={current.laid} step={step} onSelect={(s) => setPos({ page, step: s })} portal={labels} />}
+        {current.id === "machine" && <MachineParts chat={chat} portal={labels} />}
         {current.build && <CameraRig build={current.build} />}
         <ViewShift />
         <OrbitControls makeDefault enablePan={false} enableDamping minDistance={10} maxDistance={40} maxPolarAngle={Math.PI * 0.46} />
       </Canvas>
+      {/* Labels for 3D parts render here: above the canvas, below the panels. */}
+      <div ref={labels} className="pointer-events-none absolute inset-0 overflow-hidden" />
 
       {/* Top bar */}
       <div className="pointer-events-none absolute inset-x-0 top-0 flex items-start justify-between gap-3 p-3 sm:p-4">

@@ -16,10 +16,11 @@ npm run dev     # site on :3000, proxies /api to :8000
 
 ## 3D tour
 
-`/tour` is an instruction-booklet tour built with React Three Fiber. Builds live in `scene/builds.ts`: each set has one
-step per content step, plus an intro and a check step (the build fails if they drift apart). Bricks drop in per step;
-bricks listed in a step's `reject` are thrown off by the verifier. The Technic machine page (`scene/Machine.tsx`) is
-driven by the live chat stream.
+`/tour` is an instruction-booklet tour built with React Three Fiber. Each set is its real architecture built from
+bricks (`scene/diagrams.ts`): modules are labelled, clickable components (databases are cylinders, people are
+minifigures), edges are conveyors with packets showing the data flow, and a module's `step` says which build step adds
+it. The thing each check step catches (`rejectAt`) is thrown off the build. The build fails if a diagram doesn't fit
+its content or modules overlap. The Technic machine page (`scene/Machine.tsx`) is driven by the live chat stream.
 
 ## Editing content
 

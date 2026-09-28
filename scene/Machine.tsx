@@ -2,8 +2,9 @@
 
 // The moving parts of the Technic machine, driven by the live chat trace:
 // the question brick rides the belt from station to station as each SSE event arrives.
+import { Html } from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
-import { useMemo, useRef } from "react";
+import { useMemo, useRef, type RefObject } from "react";
 import * as THREE from "three";
 import type { Chat } from "@/components/chat";
 import { brickGeometry, COLOURS, PLATE } from "./bricks";
@@ -91,7 +92,7 @@ function Gear({ position, radius, speed }: { position: [number, number, number];
   );
 }
 
-export function MachineParts({ chat }: { chat: Chat }) {
+export function MachineParts({ chat, portal }: { chat: Chat; portal: RefObject<HTMLDivElement | null> }) {
   const stage = machineStage(chat);
   const brick = useRef<THREE.Mesh>(null);
   const arm = useRef<THREE.Group>(null);
@@ -162,6 +163,24 @@ export function MachineParts({ chat }: { chat: Chat }) {
       {/* Gearbox gears. */}
       <Gear position={[11, 2.6, 1]} radius={1} speed={gearSpeed} />
       <Gear position={[12.95, 2.6, 1]} radius={0.8} speed={gearSpeed} />
+
+      {/* Station labels. */}
+      {(
+        [
+          ["Retrieve", "BM25 + embeddings", [4, 4.9, 3], ["retrieving"]],
+          ["Confidence gate", "answer or decline", [7.5, 4.4, 1], ["gating"]],
+          ["Declined", "off-topic questions", [8, 2.4, 8.4], ["declined"]],
+          ["LLM", "grounded answer", [12, 3.8, 1], ["generating"]],
+          ["Verify", "citations + numbers", [16, 4.9, 3], ["verifying", "passed", "flagged"]],
+        ] as [string, string, [number, number, number], Stage[]][]
+      ).map(([name, caption, pos, stages]) => (
+        <Html key={name} position={pos} center portal={portal as RefObject<HTMLElement>}>
+          <div className={`whitespace-nowrap rounded-md border-2 border-ink px-2 py-1 font-display shadow-[2px_2px_0_var(--ink)] ${stages.includes(stage) ? "bg-brick-yellow" : "bg-card"}`}>
+            <span className="block text-[11px] font-extrabold leading-tight sm:text-xs">{name}</span>
+            <span className="hidden font-mono text-[10px] leading-tight text-ink-soft sm:block">{caption}</span>
+          </div>
+        </Html>
+      ))}
 
       {/* Verify stamp head. */}
       <mesh ref={stamp} position={[16, 3.1, 4]} castShadow>
